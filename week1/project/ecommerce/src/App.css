@@ -15,6 +15,14 @@
   cursor: pointer;
 }
 
+.category-buttons button.active {
+  background-color: #333;
+}
+
+.selected-category {
+  margin-bottom: 10px;
+}
+
 .product-list {
   display: flex;
   flex-wrap: wrap;
