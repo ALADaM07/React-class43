@@ -2,8 +2,14 @@
   text-align: center;
 }
 
+h1, h2 {
+  text-align: center;
+}
+
 .category-buttons {
   margin: 20px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .category-buttons button {
@@ -21,6 +27,7 @@
 
 .selected-category {
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .product-list {

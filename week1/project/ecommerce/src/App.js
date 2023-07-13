@@ -1,67 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import allProducts from './fake-data/all-products';
 import './App.css';
 
 const App = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [category, setCategory] = useState('all');
 
-  useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
-        const uniqueCategories = [
-          ...new Set(data.map((product) => product.category)),
-        ];
-        setCategories(uniqueCategories);
-      });
-  }, []);
-
-  const filterProducts = (category) => {
-    if (category === 'All') {
-      setFilteredProducts(products);
-      setSelectedCategory('All');
-    } else {
-      const filtered = products.filter(
-        (product) => product.category === category
-      );
-      setFilteredProducts(filtered);
-      setSelectedCategory(category);
-    }
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
   };
 
+  const filteredProducts =
+    category === 'all'
+      ? allProducts
+      : allProducts.filter((product) => product.category === category);
+
   return (
-    <div className='App'>
-      <h1>Web Shop</h1>
+    <div>
+      <h1>FAKE WEB SHOP</h1>
       <div className='category-buttons'>
         <button
-          onClick={() => filterProducts('All')}
-          className={selectedCategory === 'All' ? 'active' : ''}>
+          className={category === 'all' ? 'active' : ''}
+          onClick={() => handleCategoryChange('all')}>
           All
         </button>
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => filterProducts(category)}
-            className={selectedCategory === category ? 'active' : ''}>
-            {category}
-          </button>
-        ))}
+        <button
+          className={category === "men's clothing" ? 'active' : ''}
+          onClick={() => handleCategoryChange("men's clothing")}>
+          Men's Clothing
+        </button>
+        <button
+          className={category === "women's clothing" ? 'active' : ''}
+          onClick={() => handleCategoryChange("women's clothing")}>
+          Women's Clothing
+        </button>
+        <button
+          className={category === 'jewelery' ? 'active' : ''}
+          onClick={() => handleCategoryChange('jewelery')}>
+          Jewelry
+        </button>
+        <button
+          className={category === 'electronics' ? 'active' : ''}
+          onClick={() => handleCategoryChange('electronics')}>
+          Electronics
+        </button>
       </div>
-      <div className='selected-category'>
-        Selected Category: {selectedCategory}
-      </div>
+
+      <h2>FAKE Products</h2>
       <div className='product-list'>
         {filteredProducts.map((product) => (
-          <div key={product.id} className='product-card'>
-            <img src={product.image} alt={product.title} />
+          <div className='product-card' key={product.id}>
             <h3>{product.title}</h3>
-            <p>{product.price}</p>
-            <p>{product.category}</p>
-            <button>Add to Cart</button>
+            <img src={product.image} alt={product.title} />
+            <p>Price: ${product.price}</p>
+            <p>Category: {product.category}</p>
           </div>
         ))}
       </div>
