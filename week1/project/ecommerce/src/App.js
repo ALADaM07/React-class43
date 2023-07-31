@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import allProducts from './fake-data/all-products';
 import './App.css';
-
+import ProductCard from './components/ProductCard';
+import CategoryButton from './components/CategoryButton';
 const App = () => {
   const [category, setCategory] = useState('all');
 
@@ -18,42 +19,37 @@ const App = () => {
     <div>
       <h1>FAKE WEB SHOP</h1>
       <div className='category-buttons'>
-        <button
-          className={category === 'all' ? 'active' : ''}
-          onClick={() => handleCategoryChange('all')}>
-          All
-        </button>
-        <button
-          className={category === "men's clothing" ? 'active' : ''}
-          onClick={() => handleCategoryChange("men's clothing")}>
-          Men's Clothing
-        </button>
-        <button
-          className={category === "women's clothing" ? 'active' : ''}
-          onClick={() => handleCategoryChange("women's clothing")}>
-          Women's Clothing
-        </button>
-        <button
-          className={category === 'jewelery' ? 'active' : ''}
-          onClick={() => handleCategoryChange('jewelery')}>
-          Jewelry
-        </button>
-        <button
-          className={category === 'electronics' ? 'active' : ''}
-          onClick={() => handleCategoryChange('electronics')}>
-          Electronics
-        </button>
+        <CategoryButton
+          category='all'
+          activeCategory={category}
+          handleCategoryChange={handleCategoryChange}
+        />
+        <CategoryButton
+          category="men's clothing"
+          activeCategory={category}
+          handleCategoryChange={handleCategoryChange}
+        />
+        <CategoryButton
+          category="women's clothing"
+          activeCategory={category}
+          handleCategoryChange={handleCategoryChange}
+        />
+        <CategoryButton
+          category='jewelery'
+          activeCategory={category}
+          handleCategoryChange={handleCategoryChange}
+        />
+        <CategoryButton
+          category='electronics'
+          activeCategory={category}
+          handleCategoryChange={handleCategoryChange}
+        />
       </div>
 
       <h2>FAKE Products</h2>
       <div className='product-list'>
         {filteredProducts.map((product) => (
-          <div className='product-card' key={product.id}>
-            <h3>{product.title}</h3>
-            <img src={product.image} alt={product.title} />
-            <p>Price: ${product.price}</p>
-            <p>Category: {product.category}</p>
-          </div>
+          <ProductCard product={product} />
         ))}
       </div>
     </div>
