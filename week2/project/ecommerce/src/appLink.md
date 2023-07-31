@@ -1,0 +1,1 @@
+You can find the app deployed on Netlify by clicking on this [Link](https://alamin-react-fake-shop.netlify.app)
