@@ -1,28 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import useFetch from './useFetch';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-
-    fetch(`https://fakestoreapi.com/products/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProduct(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setError('Failed to fetch product details.');
-        console.error('Error fetching product details:', error);
-      });
-  }, [id]);
+  const productFetch = useFetch(`https://fakestoreapi.com/products/${id}`);
+  const { data: product, isLoading, error } = productFetch;
 
   if (isLoading) {
     return <p className='is-loading'>Loading...</p>;
@@ -43,7 +26,10 @@ const ProductDetail = () => {
         <img src={product.image} alt={product.title} />
       </div>
       <p>{product.description}</p>
-      <p>Price: {product.price}</p>
+      <p className='detail-price'>Price: ${product.price}</p>{' '}
+      <button>
+        <Link to='/'>Go Back</Link>
+      </button>
     </div>
   );
 };

@@ -47,15 +47,23 @@ h1, h2 {
 }
 
 .product-card {
+  position: relative;
   width: 250px;
   margin: 10px;
   padding: 10px;
   border: 1px solid #ccc;
+
 }
 
-.product-card img {
-  width: 100%;
+.product-img {
+  width: 80%;
   height: auto;
+}
+
+.heart-fav {
+  width: 20px ;
+  position: absolute;
+  right: 20px;
 }
 
 .product-card h3 {
@@ -67,20 +75,21 @@ h1, h2 {
   margin: 5px 0;
 }
 
-.product-card button {
+button {
   background: #727a1c;
   color: #fff;
   border: none;
   padding: 5px 10px;
+  margin-top: 20px;
   cursor: pointer;
 }
 
-.product-card button:hover {
+button:hover {
   background: #9aae2a;
 }
 
 
-.product-card button a {
+button a {
   color: #fff;
   text-decoration: none;
 }
@@ -100,6 +109,14 @@ h1, h2 {
   flex-direction: column;
 }
 
+.detail-price p {
+  font-size: large;
+  background-color: #cde05d;
+  padding: 8px;
+  border-radius: 5px;
+  color: #000000;
+  margin-top: 10px;
+}
 
 .image-container {
   display: flex;
@@ -139,4 +156,41 @@ h1, h2 {
 
 .navbar a:hover {
   color: #ccc;
+}
+
+.favorite-container {
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.favorite-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.product-list {
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.favorite-container button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  background-color: #9aae2a;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.favorite-container button:hover {
+  background-color: #7e8a24;
 }

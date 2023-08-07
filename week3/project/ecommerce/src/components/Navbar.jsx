@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useFavorites } from './FavoritesContext';
 
 const Navbar = () => {
+  const { favorites } = useFavorites();
+
   return (
     <nav className='navbar'>
       <ul>
@@ -9,7 +12,7 @@ const Navbar = () => {
           <Link to='/'>Home</Link>
         </li>
         <li>
-          <Link to='/contact'>Contact</Link>
+          <Link to='/favorites'>Favorites ({favorites.length}) </Link>
         </li>
       </ul>
     </nav>

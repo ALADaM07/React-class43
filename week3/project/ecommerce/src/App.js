@@ -1,58 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import CategoryButton from './components/CategoryButton';
+import { FavoritesProvider } from './components/FavoritesContext';
+import FavoritesPage from './components/FavoritesPage';
+import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import ProductDetail from './components/ProductDetail';
-import Navbar from './components/Navbar';
+import useFetch from './components/useFetch';
 
 const App = () => {
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const categoriesFetch = useFetch(
+    'https://fakestoreapi.com/products/categories'
+  );
+  const productsFetch = useFetch(
+    selectedCategory === 'all'
+      ? 'https://fakestoreapi.com/products'
+      : `https://fakestoreapi.com/products/category/${selectedCategory}`
+  );
 
   useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-
-    fetch('https://fakestoreapi.com/products/categories')
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(['all', ...data]);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setError('Failed to fetch categories.');
-        console.error('Error fetching categories:', error);
-      });
-  }, []);
+    if (!categoriesFetch.isLoading && !categoriesFetch.error) {
+      setCategories(categoriesFetch.data || []);
+    }
+  }, [categoriesFetch]);
 
   useEffect(() => {
-    if (!selectedCategory) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    const endpoint =
-      selectedCategory === 'all'
-        ? 'https://fakestoreapi.com/products'
-        : `https://fakestoreapi.com/products/category/${selectedCategory}`;
-
-    fetch(endpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setError('Failed to fetch products.');
-        console.error('Error fetching products:', error);
-      });
-  }, [selectedCategory]);
+    if (!productsFetch.isLoading && !productsFetch.error) {
+      setProducts(productsFetch.data || []);
+    }
+  }, [productsFetch]);
 
   const handleCategoryChange = (newCategory) => {
     setSelectedCategory(newCategory);
@@ -60,42 +41,47 @@ const App = () => {
 
   return (
     <Router>
-      <div className='app-container'>
-        <Navbar />
-        <div className='app-content'>
-          <h1>FAKE WEB SHOP</h1>
-          <div className='category-buttons'>
-            {categories.map((category) => (
-              <CategoryButton
-                key={category}
-                category={category}
-                activeCategory={selectedCategory}
-                handleCategoryChange={handleCategoryChange}
+      <FavoritesProvider>
+        <div className='app-container'>
+          <Navbar />
+          <div className='app-content'>
+            <Routes>
+              <Route
+                path='/'
+                element={
+                  <>
+                    <h1>FAKE WEB SHOP</h1>
+                    <div className='category-buttons'>
+                      {categories.map((category) => (
+                        <CategoryButton
+                          key={category}
+                          category={category}
+                          activeCategory={selectedCategory}
+                          handleCategoryChange={handleCategoryChange}
+                        />
+                      ))}
+                    </div>
+                    <h2>FAKE Products</h2>
+                    {productsFetch.isLoading ? (
+                      <p>Loading products...</p>
+                    ) : productsFetch.error ? (
+                      <p>Error: {productsFetch.error}</p>
+                    ) : (
+                      <div className='product-list'>
+                        {products.map((product) => (
+                          <ProductCard key={product.id} product={product} />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                }
               />
-            ))}
+              <Route path='/product/:id' element={<ProductDetail />} />
+              <Route path='/favorites' element={<FavoritesPage />} />
+            </Routes>
           </div>
-          <h2>FAKE Products</h2>
-          <Routes>
-            <Route
-              path='/'
-              element={
-                isLoading ? (
-                  <p>Loading...</p>
-                ) : error ? (
-                  <p>Error: {error}</p>
-                ) : (
-                  <div className='product-list'>
-                    {products.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
-                )
-              }
-            />
-            <Route path='/product/:id' element={<ProductDetail />} />
-          </Routes>
         </div>
-      </div>
+      </FavoritesProvider>
     </Router>
   );
 };
